@@ -1,38 +1,41 @@
 package com.erikb.nolife;
 
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
-public final class Nolife extends JavaPlugin{
-    FileConfiguration config = this.getConfig();
-    ScheduledExecutorService executorMySQL = Executors.newSingleThreadScheduledExecutor();
+public class Nolife extends JavaPlugin {
+
+    private static Nolife instance;
+
+    private final FileConfiguration config = this.getConfig();
+
     @Override
     public void onEnable() {
-        System.out.println("Hello World!");
-        Objects.requireNonNull(getCommand("nolife")).setExecutor(new Commands());
+        instance = this;
+        this.getLogger().info("Hello world!");
         saveDefaultConfig();
-        List<OfflinePlayer> players = Arrays.asList(Bukkit.getOfflinePlayers());
-        if(config.getBoolean("mysql.enabled")) {
-            MySQL.setupConnection(this);
-            executorMySQL.scheduleAtFixedRate(new MySQL(players), 0, config.getInt("mysql.refresh-time"), TimeUnit.MINUTES);
-        }
 
+        Objects.requireNonNull(getCommand("nolife")).setExecutor(new Commands());
+
+        MySQL mySQL = new MySQL(Objects.requireNonNull(this.config.getConfigurationSection("mysql")));
+        if(config.getBoolean("mysql.enabled")) {
+            mySQL.setupConnection();
+
+            long period = config.getInt("mysql.refresh-time") * 60 * 20L;
+            Bukkit.getScheduler().runTaskTimerAsynchronously(this, mySQL, 0, period);
+        }
     }
 
     @Override
     public void onDisable() {
-        System.out.println("Goodbye World!");
-        if(config.getBoolean("mysql.enabled")) {
-            executorMySQL.shutdown();
-        }
+        this.getLogger().info("Goodbye world!");
     }
+
+    public static Nolife getInstance() {
+        return instance;
+    }
+
 }
