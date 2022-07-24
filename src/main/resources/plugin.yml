@@ -1,0 +1,10 @@
+name: Nolife
+version: '${version}'
+main: com.erikb.nolife.Nolife
+api-version: 1.17
+authors: [ erikb ]
+description: Shows how much time a user has spent in game
+commands:
+  nolife:
+    description:  List how much time people have spent playing
+    usage: /<nolife>

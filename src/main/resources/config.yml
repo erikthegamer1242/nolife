@@ -1,0 +1,16 @@
+# Keep in mind the spacing of the YAML file. It is important.
+# MySQL settings
+mysql:
+  enabled: false # By default, the MySQL class is disabled. To enable it replace false with true
+  serverHost: "localhost" # This is the hostname or ip yput MySQL server runs on
+  serverPort: "3306" # Port that your MySQL server runs on, usually if you didn't change anything the MySQL port will be 3306
+  database: "somedb" # Replace this with your database name
+  tablePrefix: "" # The table name will always be stats, but if you want to store stats from multiple servers on the same database, you can specify a tablePrefix, the table will have a format of tablePrefix_stats. If you don't need a table prefix leave empty
+  username: "someuser" # This is the user that has full access to your database
+  password: "somepassword" # Password for the user
+  refresh-time: 5 # How often will the statistics get saved to the database
+
+# Discord bot settings
+discord:
+  enabled: false
+  token: "" # Your developer discord token
