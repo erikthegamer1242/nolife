@@ -26,25 +26,13 @@ public class MySQL implements Runnable {
     }
 
     void setupConnection() {
+        System.out.println(username + password + databaseUrl + tableName);
         try(Connection conn = DriverManager.getConnection(databaseUrl, username, password)) {
-            PreparedStatement stmt = conn.prepareStatement("SELECT count(*) "
-                    + "FROM information_schema.tables "
-                    + "WHERE table_name = ?"
-                    + "LIMIT 1;");
-            stmt.setString(1, tableName);
-
-            ResultSet rs = stmt.executeQuery();
-            rs.next();
-            if (rs.getInt(1) == 0) {
-                String CREATE_TABLE_SQL = "CREATE TABLE " + tableName + " ("
-                        + "playerName VARCHAR(17) NOT NULL,"
-                        + "playerHours DOUBLE NOT NULL,"
-                        + "PRIMARY KEY (playerName))";
-                stmt = conn.prepareStatement(CREATE_TABLE_SQL);
-                stmt.executeUpdate();
-                rs.close();
-                stmt.close();
-            }
+            PreparedStatement stmt = conn.prepareStatement("CREATE TABLE IF NOT EXISTS " + tableName + " ( " +
+                    "playerName VARCHAR(17) NOT NULL," +
+                    "playerHours DOUBLE NOT NULL," +
+                    "PRIMARY KEY (playerName))");
+            stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
