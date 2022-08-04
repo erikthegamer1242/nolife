@@ -9,20 +9,20 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import javax.security.auth.login.LoginException;
 
-public class Discord {
+public class DiscordClient {
 
-    public static JDA jdaBuilder;
+    private JDA client;
 
-    private String token;
+    private final String token;
 
-    public Discord (ConfigurationSection section) {
+    public DiscordClient(ConfigurationSection section) {
          token = section.getString("token");
     }
 
     public void setup() {
         Nolife.getInstance().getLogger().info("Discord Bot started");
         try {
-            jdaBuilder = JDABuilder.createDefault(token, GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT)
+            client = JDABuilder.createDefault(token, GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT)
                     .addEventListeners(new DiscordEventListener())
                     .setActivity(Activity.playing("!nolife"))
                     .disableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOJI, CacheFlag.STICKER)
@@ -31,4 +31,9 @@ public class Discord {
             throw new RuntimeException(e);
         }
     }
+
+    public void shutdown() {
+        this.client.shutdown();
+    }
+
 }

@@ -13,22 +13,20 @@ import java.util.List;
 
 public class DiscordEventListener extends ListenerAdapter {
 
-    private Message message;
-    private MessageChannel channel;
-
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        message = event.getMessage();
-        if(message.getContentRaw().equals("!nolife")) {
-            channel = event.getChannel();
+        Message message = event.getMessage();
+        if(!message.getContentRaw().equals("!nolife"))
+            return;
 
-            List<OfflinePlayer> players = Arrays.asList(Bukkit.getOfflinePlayers());
-            players.sort(PlayerSorter::comparePlayers);
+        MessageChannel channel = event.getChannel();
 
-            for (OfflinePlayer p : players) {
-                double playerHours = (double) p.getStatistic(Statistic.PLAY_ONE_MINUTE) / (20 * 60 * 60);
-                channel.sendMessage("Player " + p.getName() + " wasted " + String.format("%.2f", playerHours) + " hours").complete();
-            }
+        List<OfflinePlayer> players = Arrays.asList(Bukkit.getOfflinePlayers());
+        players.sort(PlayerSorter::comparePlayers);
+
+        for (OfflinePlayer p : players) {
+            double playerHours = (double) p.getStatistic(Statistic.PLAY_ONE_MINUTE) / (20 * 60 * 60);
+            channel.sendMessage("Player " + p.getName() + " wasted " + String.format("%.2f", playerHours) + " hours").complete();
         }
     }
 }
