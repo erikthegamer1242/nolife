@@ -26,7 +26,6 @@ public class MySQL implements Runnable {
     }
 
     void setupConnection() {
-        System.out.println(username + password + databaseUrl + tableName);
         try(Connection conn = DriverManager.getConnection(databaseUrl, username, password)) {
             PreparedStatement stmt = conn.prepareStatement("CREATE TABLE IF NOT EXISTS " + tableName + " ( " +
                     "playerName VARCHAR(17) NOT NULL," +
@@ -41,12 +40,9 @@ public class MySQL implements Runnable {
 
     public void run() {
         try(Connection conn = DriverManager.getConnection(databaseUrl, username, password)) {
-            Arrays.sort(Bukkit.getOfflinePlayers(), PlayerSorter::comparePlayers);
-
             for (OfflinePlayer p : Bukkit.getOfflinePlayers()) {
                 double playerHours = (double) p.getStatistic(Statistic.PLAY_ONE_MINUTE) / (20 * 60 * 60);
                 playerHours = Double.parseDouble(df.format(playerHours));
-
                 PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO `" + tableName + "` (`playerName`, `playerHours`) VALUES (?, ?)  ON DUPLICATE KEY UPDATE `playerHours`=?");
                 preparedStatement.setString(1, p.getName());
                 preparedStatement.setDouble(2, playerHours);

@@ -19,6 +19,8 @@ repositories {
 }
 
 dependencies {
+    implementation 'net.dv8tion:JDA:5.0.0-alpha.17'
+    implementation 'org.slf4j:slf4j-nop:1.7.36'
     implementation 'mysql:mysql-connector-java:8.0.29'
     compileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
 
