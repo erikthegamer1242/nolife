@@ -6,27 +6,32 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.Statistic;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static com.erikb.nolife.DiscordCommands.Help.help;
+import static com.erikb.nolife.DiscordCommands.Page.page;
 
 public class DiscordEventListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
+
         Message message = event.getMessage();
-        if(!message.getContentRaw().equals("!nolife"))
-            return;
-
+        String[] args = message.getContentRaw().split("\\s+");
         MessageChannel channel = event.getChannel();
-
         List<OfflinePlayer> players = Arrays.asList(Bukkit.getOfflinePlayers());
         players.sort(PlayerSorter::comparePlayers);
 
-        for (OfflinePlayer p : players) {
-            double playerHours = (double) p.getStatistic(Statistic.PLAY_ONE_MINUTE) / (20 * 60 * 60);
-            channel.sendMessage("Player " + p.getName() + " wasted " + String.format("%.2f", playerHours) + " hours").complete();
+        if(!args[0].equals("!nolife"))
+            return;
+
+        if (message.getContentRaw().toLowerCase().contains("page")) {
+            page(args, message, players, channel);
+        }
+        if (message.getContentRaw().toLowerCase().contains("help")) {
+            help(channel);
         }
     }
 }

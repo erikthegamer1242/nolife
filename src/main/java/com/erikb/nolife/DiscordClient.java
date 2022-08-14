@@ -24,7 +24,7 @@ public class DiscordClient {
         try {
             client = JDABuilder.createDefault(token, GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT)
                     .addEventListeners(new DiscordEventListener())
-                    .setActivity(Activity.playing("!nolife"))
+                    .setActivity(Activity.playing("!nolife help"))
                     .disableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOJI, CacheFlag.STICKER)
                     .build();
         } catch (LoginException e) {
