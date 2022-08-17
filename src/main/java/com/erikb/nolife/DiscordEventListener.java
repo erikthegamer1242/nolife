@@ -26,12 +26,13 @@ public class DiscordEventListener extends ListenerAdapter {
 
         if(!args[0].equals("!nolife"))
             return;
-
-        if (message.getContentRaw().toLowerCase().contains("page")) {
-            page(args, message, players, channel);
-        }
-        if (message.getContentRaw().toLowerCase().contains("help")) {
-            help(channel);
+        if(args.length > 1) {
+            if (args[1].equals("page")) {
+                page(args, players, channel);
+            }
+            if (args[1].equals("help")) {
+                help(channel);
+            }
         }
     }
 }
